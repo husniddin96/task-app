@@ -1,0 +1,39 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - db
+      - db_test
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tasks
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d/
+
+  db_test:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tasks
+    ports:
+      - "5431:5432"
+    volumes:
+      - pgtestdata:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d/
+
+volumes:
+  pgdata:
+  pgtestdata:
